@@ -85,7 +85,7 @@
 
   _learnq.push(['identify', {
     // Change the line below to dynamically print the user's email.
-    '$email' : '{{ 'niles.d.rowland@gmail.com' }}
+    '$email' : '{{ "niles.d.rowland" }}'
   }]);
 </script>
 </body>
