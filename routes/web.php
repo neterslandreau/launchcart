@@ -14,8 +14,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('front');
+})->name('front');
+
+Route::get('/contacts', 'ContactsController@index')->name('contacts');
 
 Auth::routes();
 

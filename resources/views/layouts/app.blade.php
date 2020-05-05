@@ -76,5 +76,17 @@
             @yield('content')
         </main>
     </div>
+    <script
+  async type="text/javascript"
+  src="//static.klaviyo.com/onsite/js/klaviyo.js?company_id=X6q6vt"
+></script>
+<script>
+  var _learnq = _learnq || [];
+
+  _learnq.push(['identify', {
+    // Change the line below to dynamically print the user's email.
+    '$email' : '{{ email }}'
+  }]);
+</script>
 </body>
 </html>
