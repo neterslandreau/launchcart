@@ -92,9 +92,6 @@
             @yield('content')
         </main>
     </div>
-    <script
-  async type="text/javascript"
-  src="//static.klaviyo.com/onsite/js/klaviyo.js?company_id=X6q6vt"
-></script>
+    <script async type="text/javascript" src="//static.klaviyo.com/onsite/js/klaviyo.js?company_id=X6q6vt"></script>
 </body>
 </html>

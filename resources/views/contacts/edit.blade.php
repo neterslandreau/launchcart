@@ -34,7 +34,7 @@
 
 
             <div class="form-group">
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button id="edit-contact" type="submit" class="btn btn-primary">Save</button>
             </div>
         </form>
 

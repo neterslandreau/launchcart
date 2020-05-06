@@ -11,9 +11,6 @@
 		<div class="col-md-2">{{ $contact->phone }}</div>
 		<div class="col-md-2"><a href="/contacts/{{ $contact->id }}/edit">Edit Contact</a></div>
 		<div class="col-md-2"><a href="/contacts/{{ $contact->id }}/delete">Delete Contact</a></div>
-
-				
-
 @endforeach
 	</div>
 </div>

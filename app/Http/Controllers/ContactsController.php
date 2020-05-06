@@ -34,7 +34,7 @@ class ContactsController extends Controller
      */
     public function create()
     {
-        return view('contacts.create');
+        return view('contacts.kcreate');
     }
 
     /**
