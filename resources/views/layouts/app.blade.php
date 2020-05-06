@@ -49,6 +49,7 @@
                                 </li>
                             @endif
                         @else
+                            <li class="nav-item"><a class="nav-link" href="{{ route('create') }}">Add Contact</a></li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>
@@ -71,6 +72,21 @@
                 </div>
             </div>
         </nav>
+        @if ($flash = session('message'))
+
+        <div class="alert alert-success" role="alert">
+            {{ $flash }}
+        </div>
+
+        @endif
+
+        @if ($flash = session('error'))
+
+        <div class="alert alert-danger" role="alert">
+            {{ $flash }}
+        </div>
+
+        @endif
 
         <main class="py-4">
             @yield('content')
@@ -80,13 +96,5 @@
   async type="text/javascript"
   src="//static.klaviyo.com/onsite/js/klaviyo.js?company_id=X6q6vt"
 ></script>
-<script>
-  var _learnq = _learnq || [];
-
-  _learnq.push(['identify', {
-    // Change the line below to dynamically print the user's email.
-    '$email' : '{{ "niles.d.rowland" }}'
-  }]);
-</script>
 </body>
 </html>

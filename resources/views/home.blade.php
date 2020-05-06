@@ -14,7 +14,7 @@
                         </div>
                     @endif
 
-                    hola
+                    <a href="/contacts">Go to Contacts</a>
                 </div>
             </div>
         </div>

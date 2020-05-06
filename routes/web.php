@@ -18,6 +18,13 @@ Route::get('/', function () {
 })->name('front');
 
 Route::get('/contacts', 'ContactsController@index')->name('contacts');
+Route::get('/contacts/create', 'ContactsController@create')->name('create');
+Route::get('/contacts/{id}/edit', 'ContactsController@edit');
+Route::get('/contacts/{id}/delete', 'ContactsController@destroy');
+Route::get('/contacts/{id}', 'ContactsController@show')->name('view');
+Route::post('/contacts/{id}/edit', 'ContactsController@edit');
+Route::post('/contacts', 'ContactsController@store');
+
 
 Auth::routes();
 

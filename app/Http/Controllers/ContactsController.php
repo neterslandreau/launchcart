@@ -12,7 +12,7 @@ class ContactsController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth')->except(['index']);
+        $this->middleware('auth');
     }
 
     /**
@@ -22,8 +22,8 @@ class ContactsController extends Controller
      */
     public function index()
     {
-        $contacts = Contact::get();
-        dd($contacts);
+        $contacts = Contact::where('user_id', auth()->user()->id)->get();
+        // dd($contacts);
         return view('contacts.index', compact('contacts'));
     }
 
@@ -34,7 +34,7 @@ class ContactsController extends Controller
      */
     public function create()
     {
-        //
+        return view('contacts.create');
     }
 
     /**
@@ -45,7 +45,29 @@ class ContactsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $this->validate(request(), [
+            'name' => 'required',
+            'email' => 'required',
+            'phone' => 'required',
+        ]);
+
+        if (!request('id')) {
+            $contact = Contact::create([
+                'user_id' => auth()->id(),
+                'name' => request('name'),
+                'email' => request('email'),
+                'phone' => request('phone'),
+            ]);
+        }
+        else {
+            $affected = \DB::update('update contacts set name = ?, email = ?, phone = ? where id = '.request('id'), [request('name'), request('email'), request('phone')]);
+        }
+
+        session()->flash('message', 'Your contact has been saved.');
+
+        return redirect('/contacts');
+        // dd($request);
     }
 
     /**
@@ -54,9 +76,11 @@ class ContactsController extends Controller
      * @param  \App\Contact  $contact
      * @return \Illuminate\Http\Response
      */
-    public function show(Contact $contact)
+    public function show(int $id)
     {
-        //
+        $contact = Contact::where('id', $id)->first();
+        
+        return view('contacts.show', compact('contact'));
     }
 
     /**
@@ -65,9 +89,11 @@ class ContactsController extends Controller
      * @param  \App\Contact  $contact
      * @return \Illuminate\Http\Response
      */
-    public function edit(Contact $contact)
+    public function edit(int $id)
     {
-        //
+        $contact = Contact::where('id', $id)->first();
+
+        return view('contacts.edit', compact('contact'));   
     }
 
     /**
@@ -88,8 +114,18 @@ class ContactsController extends Controller
      * @param  \App\Contact  $contact
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Contact $contact)
+    public function destroy(int $id)
     {
-        //
+        $contact = Contact::where('id', $id)->first();
+
+        if(auth()->id() == $contact->user_id) {
+            session()->flash('message', 'Your contact has been deleted.');
+            $contact->delete();
+            return redirect('/contacts');
+        }
+        else {
+            session()->flash('error', 'You cannot delete that contact.');
+            return redirect()->home();
+        }
     }
 }
