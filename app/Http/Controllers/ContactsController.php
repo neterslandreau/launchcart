@@ -2,6 +2,8 @@
 
 use App\Contact;
 use Illuminate\Http\Request;
+use Ixudra\Curl\Facades\Curl;
+use Klaviyo;
 
 class ContactsController extends Controller
 {
@@ -34,6 +36,7 @@ class ContactsController extends Controller
      */
     public function create()
     {
+
         return view('contacts.kcreate');
     }
 
@@ -59,12 +62,25 @@ class ContactsController extends Controller
                 'email' => request('email'),
                 'phone' => request('phone'),
             ]);
+
+            $response = Curl::to('https://a.klaviyo.com/api/v2/list/RwbhWB/subscribe')
+                ->withData(
+                    [
+                        'api_key' => 'pk_dd71845846894d28d91d7d418eb8ae62cc',
+                        'profiles' => [
+                            'email' => request('email'),
+                            'phone_number' => request('phone'),
+                            'name' => request('name'),
+                        ]
+                ])
+                ->asJson()
+                ->post();
         }
         else {
             $affected = \DB::update('update contacts set name = ?, email = ?, phone = ? where id = '.request('id'), [request('name'), request('email'), request('phone')]);
         }
 
-        session()->flash('message', 'Your contact has been saved.');
+        session()->flash('message', 'Your contact has been saved.'.$response);
 
         return redirect('/contacts');
         // dd($request);

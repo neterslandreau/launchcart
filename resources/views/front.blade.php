@@ -8,5 +8,4 @@
 		<a href="/contacts">Go To Contacts</a>
 	</div>
 </div>
-
 @endsection
