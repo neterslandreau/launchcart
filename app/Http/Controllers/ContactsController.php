@@ -37,7 +37,7 @@ class ContactsController extends Controller
     public function create()
     {
 
-        return view('contacts.kcreate');
+        return view('contacts.create');
     }
 
     /**
@@ -63,18 +63,18 @@ class ContactsController extends Controller
                 'phone' => request('phone'),
             ]);
 
-            $response = Curl::to('https://a.klaviyo.com/api/v2/list/RwbhWB/subscribe')
-                ->withData(
-                    [
-                        'api_key' => 'pk_dd71845846894d28d91d7d418eb8ae62cc',
-                        'profiles' => [
-                            'email' => request('email'),
-                            'phone_number' => request('phone'),
-                            'name' => request('name'),
-                        ]
-                ])
-                ->asJson()
-                ->post();
+            // $response = Curl::to('https://a.klaviyo.com/api/v2/list/RwbhWB/subscribe')
+            //     ->withData(
+            //         [
+            //             'api_key' => 'pk_dd71845846894d28d91d7d418eb8ae62cc',
+            //             'profiles' => [
+            //                 'email' => request('email'),
+            //                 'phone_number' => request('phone'),
+            //                 'name' => request('name'),
+            //             ]
+            //     ])
+            //     ->asJson()
+            //     ->post();
         }
         else {
             $affected = \DB::update('update contacts set name = ?, email = ?, phone = ? where id = '.request('id'), [request('name'), request('email'), request('phone')]);
