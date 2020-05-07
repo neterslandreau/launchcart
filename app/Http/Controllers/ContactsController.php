@@ -79,7 +79,7 @@ class ContactsController extends Controller
             $affected = \DB::update('update contacts set name = ?, email = ?, phone = ? where id = '.request('id'), [request('name'), request('email'), request('phone')]);
         }
 
-        session()->flash('message', 'Your contact has been saved.'.$response);
+        session()->flash('message', 'Your contact has been saved.');
 
         return redirect('/contacts');
         // dd($request);
