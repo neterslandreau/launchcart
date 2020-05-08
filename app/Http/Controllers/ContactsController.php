@@ -34,7 +34,7 @@ class ContactsController extends Controller
      */
     public function create()
     {
-        return view('contacts.kcreate');
+        return view('contacts.create');
     }
 
     /**
@@ -79,7 +79,7 @@ class ContactsController extends Controller
     public function show(int $id)
     {
         $contact = Contact::where('id', $id)->first();
-        
+
         return view('contacts.show', compact('contact'));
     }
 
@@ -93,7 +93,7 @@ class ContactsController extends Controller
     {
         $contact = Contact::where('id', $id)->first();
 
-        return view('contacts.edit', compact('contact'));   
+        return view('contacts.edit', compact('contact'));
     }
 
     /**
