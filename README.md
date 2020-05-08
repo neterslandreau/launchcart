@@ -20,3 +20,4 @@ with the Klavio platform:
 - During development, I had created a few contacts and received 200 responses but no content associated with the response.
 When I woke up this morning, I had many emails requesting confirmation.
 - Also, I was unable to determine how in Klavio to create a custom segment that would listen for clicks.
+- There is no batch subscribe functionality as of this writing.
