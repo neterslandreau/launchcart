@@ -56,8 +56,17 @@ class Contact extends Model
      */
     public static function editContact(string $listId, Contact $contact)
     {
-        //
-        return true;
+        $response = new \stdClass();
+        $response->status = 400;
+        $response->content = new \stdClass();
+        $response->content->detail = 'Working on it.';
+//        $response = [
+//            'status' => '400',
+//            'content' => [
+//                'detail' => 'Working on it.'
+//            ],
+//        ];
+        return $response;
     }
 
     /**

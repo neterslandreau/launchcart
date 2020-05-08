@@ -74,6 +74,7 @@ class ContactsController extends Controller
             $affected = \DB::update('update contacts set name = ?, email = ?, phone = ? where id = '.request('id'), [request('name'), request('email'), request('phone')]);
             $contact = Contact::where('id', $id)->first();
             $response = Contact::editContact($list_id, $contact);
+//            $response = '';
         }
         if ($response->status !== 200) {
             session()->flash('error', 'Your contact has been saved in the database. Klavio response : '.$response->content->detail.' response status: '.$response->status);
