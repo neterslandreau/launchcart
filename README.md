@@ -16,6 +16,7 @@
 
 ## Known Bugs
 The bugs have been noted in the PHPDoc blocks. Many, I believe, are due to my inexperience
-with the Klavio platform.
-
-Also, I was unable to determine how in Klavio to create a custom segment.
+with the Klavio platform:
+- During development, I had created a few contacts and received 200 responses but no content associated with the response.
+When I woke up this morning, I had many emails requesting confirmation.
+- Also, I was unable to determine how in Klavio to create a custom segment that would listen for clicks.
