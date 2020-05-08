@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\Contact;
+use App\User;
 use Illuminate\Http\Request;
 use Ixudra\Curl\Facades\Curl;
 use Klaviyo;
@@ -25,7 +26,7 @@ class ContactsController extends Controller
     public function index()
     {
         $contacts = Contact::where('user_id', auth()->user()->id)->get();
-        // dd($contacts);
+
         return view('contacts.index', compact('contacts'));
     }
 
@@ -54,6 +55,7 @@ class ContactsController extends Controller
             'phone' => 'required',
         ]);
 
+        $list_id = User::where(['id' => auth()->id()])->value('contact_list');
         if (!request('id')) {
             $contact = Contact::create([
                 'user_id' => auth()->id(),
@@ -61,25 +63,23 @@ class ContactsController extends Controller
                 'email' => request('email'),
                 'phone' => request('phone'),
             ]);
+            $response = Contact::addContact($list_id, $contact);
 
-            // $response = Curl::to('https://a.klaviyo.com/api/v2/list/RwbhWB/subscribe')
-            //     ->withData(
-            //         [
-            //             'api_key' => 'pk_dd71845846894d28d91d7d418eb8ae62cc',
-            //             'profiles' => [
-            //                 'email' => request('email'),
-            //                 'phone_number' => request('phone'),
-            //                 'name' => request('name'),
-            //             ]
-            //     ])
-            //     ->asJson()
-            //     ->post();
         }
         else {
+            $id = request('id');
             $affected = \DB::update('update contacts set name = ?, email = ?, phone = ? where id = '.request('id'), [request('name'), request('email'), request('phone')]);
+            $contact = Contact::where('id', $id)->first();
+            $response = Contact::editContact($list_id, $contact);
         }
+        if ($response->status !== 200) {
+            session()->flash('error', 'Your contact has been saved. Klavio response : '.$response->content->detail.' response status: '.$response->status);
 
-        session()->flash('message', 'Your contact has been saved.');
+        }
+        else {
+            session()->flash('message', 'Your contact has been saved. Please keep an eye out for the email confirmation. The Klavio response status: '.$response->status);
+
+        }
 
         return redirect('/contacts');
         // dd($request);
@@ -94,6 +94,7 @@ class ContactsController extends Controller
     public function show(int $id)
     {
         $contact = Contact::where('id', $id)->first();
+//        dd($contact);
 
         return view('contacts.show', compact('contact'));
     }
@@ -134,8 +135,16 @@ class ContactsController extends Controller
         $contact = Contact::where('id', $id)->first();
 
         if(auth()->id() == $contact->user_id) {
-            session()->flash('message', 'Your contact has been deleted.');
-            $contact->delete();
+            $listId = User::where('id', auth()->id())->first();
+            $response = Contact::deleteContact($listId->contact_list, $contact);
+
+            if ($response->status === 200) {
+                session()->flash('message', 'Your contact has been deleted.');
+                $contact->delete();
+            }
+            else {
+                session()->flash('error', $response->content->detail);
+            }
             return redirect('/contacts');
         }
         else {

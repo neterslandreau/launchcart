@@ -10,7 +10,7 @@
 
         <hr>
 
-        <form id="add-contact" method="post" action="https://a.klaviyo.com/api/v2/list/pk_dd71845846894d28d91d7d418eb8ae62cc/subscribe">
+        <form id="add-contact" method="post" action="https://a.klaviyo.com/api/v2/list/RwbhWB/subscribe">
 
             {{ csrf_field() }}
 
