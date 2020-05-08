@@ -14,7 +14,7 @@ class AddSyncdToContacts extends Migration
     public function up()
     {
         Schema::table('contacts', function (Blueprint $table) {
-            $table->addColumn('boolean', 'syncd')->after('phone');
+            $table->addColumn('boolean', 'syncd')->default(0)->after('phone');
         });
     }
 
