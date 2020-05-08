@@ -33,6 +33,8 @@
             <div class="form-group">
                 <button id="add-contact" type="submit" class="btn btn-primary">Save</button>
             </div>
+
+            <input type="hidden" name="syncd" value="0">
         </form>
 
     </div>

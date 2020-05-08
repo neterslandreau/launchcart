@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Ixudra\Curl\Facades\Curl;
 
 class User extends Authenticatable
 {
@@ -16,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'contact_list',
     ];
 
     /**
@@ -36,4 +37,13 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public static function createList(string $name)
+    {
+        $response = Curl::to('https://a.klaviyo.com/api/v2/lists')
+            ->withData(['api_key' => env('KLAVIO_API_KEY'), 'list_name' => $name])
+            ->asJson()
+            ->post();
+        return $response->list_id;
+    }
+
 }
