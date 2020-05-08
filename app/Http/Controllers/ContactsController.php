@@ -1,7 +1,10 @@
 <?php namespace App\Http\Controllers;
 
 use App\Contact;
+use App\User;
 use Illuminate\Http\Request;
+use Ixudra\Curl\Facades\Curl;
+use Klaviyo;
 
 class ContactsController extends Controller
 {
@@ -23,7 +26,7 @@ class ContactsController extends Controller
     public function index()
     {
         $contacts = Contact::where('user_id', auth()->user()->id)->get();
-        // dd($contacts);
+
         return view('contacts.index', compact('contacts'));
     }
 
@@ -38,10 +41,11 @@ class ContactsController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store/Update a resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request)
     {
@@ -52,28 +56,42 @@ class ContactsController extends Controller
             'phone' => 'required',
         ]);
 
+        $list_id = User::where(['id' => auth()->id()])->value('contact_list');
         if (!request('id')) {
             $contact = Contact::create([
                 'user_id' => auth()->id(),
                 'name' => request('name'),
                 'email' => request('email'),
                 'phone' => request('phone'),
+                'syncd' => request('syncd') // set to false
             ]);
+            $response = Contact::addContact($list_id, $contact);
+
+        }
+        // update the contact
+        else {
+            $id = request('id');
+            $affected = \DB::update('update contacts set name = ?, email = ?, phone = ? where id = '.request('id'), [request('name'), request('email'), request('phone')]);
+            $contact = Contact::where('id', $id)->first();
+            $response = Contact::editContact($list_id, $contact);
+        }
+        if ($response->status !== 200) {
+            session()->flash('error', 'Your contact has been saved in the database. Klavio response : '.$response->content->detail.' response status: '.$response->status);
+
         }
         else {
-            $affected = \DB::update('update contacts set name = ?, email = ?, phone = ? where id = '.request('id'), [request('name'), request('email'), request('phone')]);
+            session()->flash('message', 'Your contact has been saved. Please keep an eye out for the email confirmation. The Klavio response status: '.$response->status);
+
+
         }
 
-        session()->flash('message', 'Your contact has been saved.');
-
         return redirect('/contacts');
-        // dd($request);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Contact  $contact
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show(int $id)
@@ -86,7 +104,7 @@ class ContactsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Contact  $contact
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit(int $id)
@@ -97,21 +115,9 @@ class ContactsController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Contact  $contact
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Contact $contact)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Contact  $contact
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(int $id)
@@ -119,8 +125,18 @@ class ContactsController extends Controller
         $contact = Contact::where('id', $id)->first();
 
         if(auth()->id() == $contact->user_id) {
-            session()->flash('message', 'Your contact has been deleted.');
+            $listId = User::where('id', auth()->id())->first();
+            $response = Contact::deleteContact($listId->contact_list, $contact);
+
+            if ($response->status === 200) {
+                session()->flash('message', 'Your contact has been deleted.');
+            }
+            else {
+                session()->flash('error', 'Known bug: '.$response->content->detail);
+            }
+            // this soft-deletes the contact but does not affect the syncd status
             $contact->delete();
+
             return redirect('/contacts');
         }
         else {
