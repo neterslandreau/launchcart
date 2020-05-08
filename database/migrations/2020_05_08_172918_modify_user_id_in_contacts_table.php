@@ -26,7 +26,7 @@ class ModifyUserIdInContactsTable extends Migration
     public function down()
     {
         Schema::table('contacts', function (Blueprint $table) {
-            $table->bigInteger('user_id')->change();
+            $table->foreignId('user_id')->change();
         });
     }
 }
