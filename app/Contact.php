@@ -2,11 +2,15 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Ixudra\Curl\Facades\Curl;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Contact extends Model
 {
+    use SoftDeletes;
+
     protected $table = 'contacts';
     protected $fillable = ['user_id', 'name', 'email', 'phone', 'syncd'];
+    protected $dates = ['deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
