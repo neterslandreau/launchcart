@@ -6,7 +6,7 @@ use Ixudra\Curl\Facades\Curl;
 class Contact extends Model
 {
     protected $table = 'contacts';
-    protected $fillable = ['user_id', 'name', 'email', 'phone'];
+    protected $fillable = ['user_id', 'name', 'email', 'phone', 'syncd'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
