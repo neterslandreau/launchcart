@@ -10,7 +10,7 @@ use Ixudra\Curl\Facades\Curl;
 class User extends Authenticatable
 {
     use Notifiable;
-    use Uuids;
+//    use Uuids;
 
     /**
      * The attributes that are mass assignable.
