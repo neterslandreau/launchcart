@@ -67,6 +67,7 @@ class ContactsController extends Controller
             $response = Contact::addContact($list_id, $contact);
 
         }
+        // update the contact
         else {
             $id = request('id');
             $affected = \DB::update('update contacts set name = ?, email = ?, phone = ? where id = '.request('id'), [request('name'), request('email'), request('phone')]);
@@ -74,11 +75,12 @@ class ContactsController extends Controller
             $response = Contact::editContact($list_id, $contact);
         }
         if ($response->status !== 200) {
-            session()->flash('error', 'Your contact has been saved. Klavio response : '.$response->content->detail.' response status: '.$response->status);
+            session()->flash('error', 'Your contact has been saved in the database. Klavio response : '.$response->content->detail.' response status: '.$response->status);
 
         }
         else {
             session()->flash('message', 'Your contact has been saved. Please keep an eye out for the email confirmation. The Klavio response status: '.$response->status);
+
 
         }
 
@@ -127,11 +129,13 @@ class ContactsController extends Controller
 
             if ($response->status === 200) {
                 session()->flash('message', 'Your contact has been deleted.');
-                $contact->delete();
             }
             else {
                 session()->flash('error', 'Known bug: '.$response->content->detail);
             }
+            // this soft-deletes the contact but does not affect the syncd status
+            $contact->delete();
+
             return redirect('/contacts');
         }
         else {
