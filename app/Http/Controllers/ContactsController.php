@@ -63,6 +63,7 @@ class ContactsController extends Controller
                 'name' => request('name'),
                 'email' => request('email'),
                 'phone' => request('phone'),
+                'syncd' => request('syncd') // set to false
             ]);
             $response = Contact::addContact($list_id, $contact);
 
