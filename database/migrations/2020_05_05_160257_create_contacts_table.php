@@ -19,8 +19,9 @@ class CreateContactsTable extends Migration
             $table->string('name');
             $table->string('email');
             $table->string('phone');
-            $table->softDeletes();
+            $table->boolean('syncd')->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
