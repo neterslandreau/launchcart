@@ -35,7 +35,7 @@ class Contact extends Model
 
         $response = Curl::to($url)
             ->withData(['api_key' => env('KLAVIO_API_KEY'), 'profiles' => $profile])
-            ->enableDebug('/Users/nilesrowland/Projects/launchcart/curllog.txt')
+//            ->enableDebug('/Users/nilesrowland/Projects/launchcart/curllog.txt')
             ->returnResponseObject()
             ->asJson()
             ->post();
@@ -76,7 +76,7 @@ class Contact extends Model
 
         $response = Curl::to($url)
             ->withData(['api_key' => env('KLAVIO_API_KEY'), 'profiles' => $profile])
-            ->enableDebug('/Users/nilesrowland/Projects/launchcart/curllog.txt')
+//            ->enableDebug('/Users/nilesrowland/Projects/launchcart/curllog.txt')
             ->returnResponseObject()
             ->asJson()
             ->delete();
