@@ -41,10 +41,11 @@ class ContactsController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store/Update a resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request)
     {
@@ -82,19 +83,17 @@ class ContactsController extends Controller
         }
 
         return redirect('/contacts');
-        // dd($request);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Contact  $contact
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show(int $id)
     {
         $contact = Contact::where('id', $id)->first();
-//        dd($contact);
 
         return view('contacts.show', compact('contact'));
     }
@@ -102,7 +101,7 @@ class ContactsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Contact  $contact
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit(int $id)
@@ -113,21 +112,9 @@ class ContactsController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Contact  $contact
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Contact $contact)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Contact  $contact
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(int $id)
@@ -143,7 +130,7 @@ class ContactsController extends Controller
                 $contact->delete();
             }
             else {
-                session()->flash('error', $response->content->detail);
+                session()->flash('error', 'Known bug: '.$response->content->detail);
             }
             return redirect('/contacts');
         }
